@@ -29,12 +29,11 @@ const teacherRoutes = [
     label: "Analytics",
     href: "/teacher/analytics",
   },
-]
-
+];
 
 export const SidebarRoutes = () => {
-const pathname = usePathname();
-const isTeacherPage = pathname?.includes("/teacher");
+  const pathname = usePathname();
+  const isTeacherPage = pathname?.includes("/teacher");
 
   const routes = isTeacherPage ? teacherRoutes : guestRoutes;
   return (
