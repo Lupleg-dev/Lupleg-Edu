@@ -20,20 +20,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Course } from "@prisma/client";
+import { formatPrice } from "@/lib/format";
 
 interface PriceFormProps {
   initialData: Course;
   courseId: string;
-};
+}
 
 const formSchema = z.object({
-  price: z.number()
+  price: z.number(),
 });
 
-export const PriceForm = ({
-  initialData,
-  courseId
-}: PriceFormProps) => {
+export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -44,7 +42,7 @@ export const PriceForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       price: initialData?.price || undefined,
-    }
+    },
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -58,7 +56,7 @@ export const PriceForm = ({
     } catch {
       toast.error("Something went wrong");
     }
-  }
+  };
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
@@ -76,11 +74,13 @@ export const PriceForm = ({
         </Button>
       </div>
       {!isEditing && (
-        <p className={cn(
-          "text-sm mt-2",
-          !initialData.price && "text-slate-500 italic"
-        )}>
-          {initialData.price || "No price"}
+        <p
+          className={cn(
+            "text-sm mt-2",
+            !initialData.price && "text-slate-500 italic"
+          )}
+        >
+          {initialData.price ? formatPrice(initialData.price) : "No price set"}
         </p>
       )}
       {isEditing && (
@@ -108,10 +108,7 @@ export const PriceForm = ({
               )}
             />
             <div className="flex items-center gap-x-2">
-              <Button
-                disabled={!isValid || isSubmitting}
-                type="submit"
-              >
+              <Button disabled={!isValid || isSubmitting} type="submit">
                 Save
               </Button>
             </div>
@@ -119,5 +116,5 @@ export const PriceForm = ({
         </Form>
       )}
     </div>
-  )
-}
+  );
+};
