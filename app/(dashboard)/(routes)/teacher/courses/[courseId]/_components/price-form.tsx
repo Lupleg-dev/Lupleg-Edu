@@ -19,19 +19,24 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/ui/textarea";
 import { Course } from "@prisma/client";
-import { formatPrice } from "@/lib/format";
 
-interface PriceFormProps {
+interface DescriptionFormProps {
   initialData: Course;
   courseId: string;
-}
+};
 
 const formSchema = z.object({
-  price: z.number(),
+  description: z.string().min(1, {
+    message: "description is required",
+  }),
 });
 
-export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
+export const DescriptionForm = ({
+  initialData,
+  courseId
+}: DescriptionFormProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleEdit = () => setIsEditing((current) => !current);
@@ -41,8 +46,8 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      price: initialData?.price || undefined,
-    },
+      description: initialData?.description || "",
+    }
   });
 
   const { isSubmitting, isValid } = form.formState;
@@ -56,31 +61,29 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
     } catch {
       toast.error("Something went wrong");
     }
-  };
+  }
 
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course price
+        Course description
         <Button onClick={toggleEdit} variant="ghost">
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit price
+              Edit description
             </>
           )}
         </Button>
       </div>
       {!isEditing && (
-        <p
-          className={cn(
-            "text-sm mt-2",
-            !initialData.price && "text-slate-500 italic"
-          )}
-        >
-          {initialData.price ? formatPrice(initialData.price) : "No price set"}
+        <p className={cn(
+          "text-sm mt-2",
+          !initialData.description && "text-slate-500 italic"
+        )}>
+          {initialData.description || "No description"}
         </p>
       )}
       {isEditing && (
@@ -91,15 +94,13 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
           >
             <FormField
               control={form.control}
-              name="price"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      type="number"
-                      step="0.01"
+                    <Textarea
                       disabled={isSubmitting}
-                      placeholder="e.g. 'Set price for your course...'"
+                      placeholder="e.g. 'This course is about...'"
                       {...field}
                     />
                   </FormControl>
@@ -108,7 +109,10 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
               )}
             />
             <div className="flex items-center gap-x-2">
-              <Button disabled={!isValid || isSubmitting} type="submit">
+              <Button
+                disabled={!isValid || isSubmitting}
+                type="submit"
+              >
                 Save
               </Button>
             </div>
@@ -116,5 +120,5 @@ export const PriceForm = ({ initialData, courseId }: PriceFormProps) => {
         </Form>
       )}
     </div>
-  );
-};
+  )
+}
