@@ -3,7 +3,8 @@
 Welcome to Lupleg Edu! This is a repository dedicated to educational resources and materials for Lupleg.
 
 ## Prisma Cammands
-- 
+- npx prima db push
+- npx prisma studio
 
 ## Table of Contents
 
