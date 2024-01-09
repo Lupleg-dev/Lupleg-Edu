@@ -5,6 +5,7 @@ Welcome to Lupleg Edu! This is a repository dedicated to educational resources a
 ## Prisma Cammands
 - npx prima db push
 - npx prisma studio
+- npx prisma generate
 
 ## Table of Contents
 
